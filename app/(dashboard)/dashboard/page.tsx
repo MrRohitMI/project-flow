@@ -1,6 +1,6 @@
-import SectionCard from "@/components/section-card";
-import StatCard from "@/components/stat-card";
-import StatusBadge from "@/components/status-badge";
+import SectionCard from "@/components/ui/section-card";
+import StatCard from "@/components/ui/stat-card";
+import StatusBadge from "@/components/ui/status-badge";
 import {
   Check,
   Folder,
