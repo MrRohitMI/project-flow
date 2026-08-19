@@ -1,10 +1,15 @@
 "use server";
+
+import { projectSchema } from "@/schemas/project.schema";
+
 type ErrorObject = {
-  name? : string,
-  key? : string,
-  description? :string,
-  status? :string
-}
+  name?: string;
+  key?: string;
+  description?: string;
+  status?: string;
+  startDate?: string;
+  endDate?: string;
+};
 type ProjectActionState = {
   success: boolean;
   message: string;
@@ -14,37 +19,30 @@ export const createProject = async (
   prevState: ProjectActionState,
   formData: FormData,
 ): Promise<ProjectActionState> => {
-  const name = formData.get("name");
-  const key = formData.get("key");
-  const description = formData.get("description");
-  const status = formData.get("status");
-  const startDate = formData.get("startDate");
-  const endDate = formData.get("endDate");
-  const errors:ErrorObject = {};
-  if (!name || typeof name !== "string" || name.trim() === "") {
-    errors.name ="Project name is required.";
-  }
-  if (!key || typeof key !== "string" || key.trim() === "") {
-    errors.key = "Project key is required.";
-  }
-  if (
-    !description ||
-    typeof description !== "string" ||
-    description.trim() === ""
-  ) {
-    errors.description = "Project description is required.";
-  }
-  if (!status || typeof status !== "string" || status.trim() === "") {
-    errors.status = "Project status is required.";
-  }
-  if (Object.keys(errors).length >= 1) {
+  const data = {
+    name: formData.get("name"),
+    key: formData.get("key"),
+    description: formData.get("description"),
+    status: formData.get("status"),
+    startDate: formData.get("startDate"),
+    endDate: formData.get("endDate"),
+  };
+  const result = projectSchema.safeParse(data);
+
+  if (!result.success) {
+    const errors: ErrorObject = {};
+    result.error.issues.forEach((issue) => {
+      const field = issue.path[0];
+      if (typeof field === "string") {
+        errors[field as keyof ErrorObject] = issue.message;
+      }
+    });
     return {
       success: false,
       message: "Please fix the errors",
-      errors: errors,
+      errors,
     };
   }
-  console.log(name, key, description, status, startDate, endDate);
   return {
     success: true,
     message: "Project received successfully",
