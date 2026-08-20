@@ -1,13 +1,24 @@
 "use client";
-import { createProject } from "@/app/actions/project";
-import Button from "./ui/button";
+import { createProject, updateProject } from "@/app/actions/project";
+import Button from "../ui/button";
 import { useActionState } from "react";
-import Input from "./ui/form/input";
-import Textarea from "./ui/form/textarea";
-import Select from "./ui/form/select";
-
-export default function ProjectForm() {
-  const [state, formAction, isPending] = useActionState(createProject, {
+import Input from "../ui/form/input";
+import Textarea from "../ui/form/textarea";
+import Select from "../ui/form/select";
+type ProjectFormProps = {
+  project?: {
+    id: string;
+    name: string;
+    key: string;
+    description: string;
+    status: "active" | "completed" | "archived";
+    startDate: string | null;
+    endDate: string | null;
+  };
+};
+export default function ProjectForm({ project }: ProjectFormProps) {
+  const action = project ? updateProject : createProject;
+  const [state, formAction, isPending] = useActionState(action, {
     success: false,
     message: "",
   });
@@ -16,14 +27,17 @@ export default function ProjectForm() {
     { label: "Completed", value: "completed" },
     { label: "Archived", value: "archived" },
   ];
+
   return (
     <form action={formAction}>
+      {project && <input type="hidden" name="projectId" value={project.id} />}
       <Input
         type="text"
         label="Project Name"
         name="name"
         placeholder="Enter Project Name"
         error={state.errors?.name}
+        defaultValue={project?.name}
       />
 
       <Input
@@ -32,6 +46,7 @@ export default function ProjectForm() {
         name="key"
         placeholder="Enter Project Key"
         error={state.errors?.key}
+        defaultValue={project?.key}
       />
 
       <Textarea
@@ -39,6 +54,7 @@ export default function ProjectForm() {
         error={state.errors?.description}
         name="description"
         placeholder="Enter Description"
+        defaultValue={project?.description}
       />
 
       <Select
@@ -47,6 +63,7 @@ export default function ProjectForm() {
         error={state.errors?.status}
         placeholder="Select Status"
         options={statusOptions}
+        defaultValue={project?.status}
       />
 
       <Input
@@ -54,6 +71,7 @@ export default function ProjectForm() {
         name="startDate"
         type="date"
         error={state.errors?.startDate}
+        defaultValue={project?.startDate?.slice(0, 10)}
       />
 
       <Input
@@ -61,6 +79,7 @@ export default function ProjectForm() {
         name="endDate"
         type="date"
         error={state.errors?.endDate}
+        defaultValue={project?.endDate?.slice(0, 10)}
       />
 
       <div className="flex justify-end gap-4 mt-4">
