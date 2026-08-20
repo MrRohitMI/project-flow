@@ -21,6 +21,7 @@ export const createProject = async (
   prevState: ProjectActionState,
   formData: FormData,
 ): Promise<ProjectActionState> => {
+  console.log("helllo", formData.get("projectId"));
   const data = {
     name: formData.get("name"),
     key: formData.get("key"),
@@ -59,6 +60,82 @@ export const createProject = async (
     return {
       success: false,
       message: "Failed to create project. Please try again.",
+    };
+  }
+};
+export const getProjects = async () => {
+  await dbConnect();
+  const projects = await Project.find().lean();
+  return projects;
+};
+
+export const updateProject = async (
+  prevState: ProjectActionState,
+  formData: FormData,
+): Promise<ProjectActionState> => {
+  const projectId = formData.get("projectId");
+
+  if (!projectId || typeof projectId !== "string") {
+    return {
+      success: false,
+      message: "Project ID is required.",
+    };
+  }
+
+  const data = {
+    name: formData.get("name"),
+    key: formData.get("key"),
+    description: formData.get("description"),
+    status: formData.get("status"),
+    startDate: formData.get("startDate"),
+    endDate: formData.get("endDate"),
+  };
+
+  const result = projectSchema.safeParse(data);
+
+  if (!result.success) {
+    const errors: ErrorObject = {};
+
+    result.error.issues.forEach((issue) => {
+      const field = issue.path[0];
+
+      if (typeof field === "string") {
+        errors[field as keyof ErrorObject] = issue.message;
+      }
+    });
+
+    return {
+      success: false,
+      message: "Please fix the errors",
+      errors,
+    };
+  }
+
+  await dbConnect();
+
+  try {
+    const project = await Project.findByIdAndUpdate(projectId, result.data, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!project) {
+      return {
+        success: false,
+        message: "Project not found.",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Project updated successfully.",
+    };
+  } catch (error) {
+    console.error("Failed to update project:", error);
+
+    return {
+      success: false,
+      message: "Failed to update project.",
     };
   }
 };
