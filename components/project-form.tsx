@@ -49,9 +49,19 @@ export default function ProjectForm() {
         options={statusOptions}
       />
 
-      <Input label="Start Date" name="startDate" type="date" />
+      <Input
+        label="Start Date"
+        name="startDate"
+        type="date"
+        error={state.errors?.startDate}
+      />
 
-      <Input label="End Date" name="endDate" type="date" />
+      <Input
+        label="End Date"
+        name="endDate"
+        type="date"
+        error={state.errors?.endDate}
+      />
 
       <div className="flex justify-end gap-4 mt-4">
         <Button disabled={isPending}>
