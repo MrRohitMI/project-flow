@@ -1,6 +1,8 @@
 "use server";
 
+import dbConnect from "@/lib/mongodb";
 import { projectSchema } from "@/schemas/project.schema";
+import Project from "@/model/Project";
 
 type ErrorObject = {
   name?: string;
@@ -43,8 +45,20 @@ export const createProject = async (
       errors,
     };
   }
-  return {
-    success: true,
-    message: "Project received successfully",
-  };
+  await dbConnect();
+  try {
+    const project = await Project.create(result.data);
+    console.log("Project Created", project);
+    return {
+      success: true,
+      message: "Project received successfully",
+    };
+  } catch (error) {
+    console.error("Failed to create project:", error);
+
+    return {
+      success: false,
+      message: "Failed to create project. Please try again.",
+    };
+  }
 };
