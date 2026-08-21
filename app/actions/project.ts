@@ -139,3 +139,33 @@ export const updateProject = async (
     };
   }
 };
+export const deleteProject = async (
+  projectId: string,
+): Promise<ProjectActionState> => {
+  if (!projectId) {
+    return {
+      success: false,
+      message: "Project Id is required.",
+    };
+  }
+  await dbConnect();
+  try {
+    const project = await Project.findByIdAndDelete(projectId);
+    if (!project) {
+      return {
+        success: false,
+        message: "Project not found.",
+      };
+    }
+    return {
+      success: true,
+      message: "Project deleted successfully.",
+    };
+  } catch (error) {
+    console.error("Failed to delete project :", error);
+    return {
+      success: false,
+      message: "Failed to delete project.",
+    };
+  }
+};
