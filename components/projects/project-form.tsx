@@ -1,10 +1,14 @@
 "use client";
 import { createProject, updateProject } from "@/app/actions/project";
 import Button from "../ui/button";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import Input from "../ui/form/input";
 import Textarea from "../ui/form/textarea";
 import Select from "../ui/form/select";
+import { useAppDispatch } from "@/store/hooks";
+import { useRouter } from "next/navigation";
+import { setSuccessMessage } from "@/store/slices/uiSlice";
+
 type ProjectFormProps = {
   project?: {
     id: string;
@@ -15,19 +19,28 @@ type ProjectFormProps = {
     startDate: string | null;
     endDate: string | null;
   };
+  onSuccess?: () => void;
 };
-export default function ProjectForm({ project }: ProjectFormProps) {
+export default function ProjectForm({ project, onSuccess }: ProjectFormProps) {
   const action = project ? updateProject : createProject;
   const [state, formAction, isPending] = useActionState(action, {
     success: false,
     message: "",
   });
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const statusOptions = [
     { label: "Active", value: "active" },
     { label: "Completed", value: "completed" },
     { label: "Archived", value: "archived" },
   ];
-
+  useEffect(() => {
+    if (state.success) {
+      router.refresh();
+      dispatch(setSuccessMessage(state.message));
+      onSuccess?.();
+    }
+  }, [state.success, state.message, router, dispatch]);
   return (
     <form action={formAction}>
       {project && <input type="hidden" name="projectId" value={project.id} />}
@@ -37,7 +50,7 @@ export default function ProjectForm({ project }: ProjectFormProps) {
         name="name"
         placeholder="Enter Project Name"
         error={state.errors?.name}
-        defaultValue={project?.name}
+        defaultValue={state.values?.name ?? project?.name}
       />
 
       <Input
@@ -46,7 +59,7 @@ export default function ProjectForm({ project }: ProjectFormProps) {
         name="key"
         placeholder="Enter Project Key"
         error={state.errors?.key}
-        defaultValue={project?.key}
+        defaultValue={state.values?.key ?? project?.key}
       />
 
       <Textarea
@@ -54,7 +67,7 @@ export default function ProjectForm({ project }: ProjectFormProps) {
         error={state.errors?.description}
         name="description"
         placeholder="Enter Description"
-        defaultValue={project?.description}
+        defaultValue={state.values?.description ?? project?.description}
       />
 
       <Select
@@ -63,7 +76,7 @@ export default function ProjectForm({ project }: ProjectFormProps) {
         error={state.errors?.status}
         placeholder="Select Status"
         options={statusOptions}
-        defaultValue={project?.status}
+        defaultValue={state.values?.status ?? project?.status}
       />
 
       <Input
@@ -71,7 +84,10 @@ export default function ProjectForm({ project }: ProjectFormProps) {
         name="startDate"
         type="date"
         error={state.errors?.startDate}
-        defaultValue={project?.startDate?.slice(0, 10)}
+        defaultValue={
+          state.values?.startDate?.slice(0, 10) ??
+          project?.startDate?.slice(0, 10)
+        }
       />
 
       <Input
@@ -79,7 +95,9 @@ export default function ProjectForm({ project }: ProjectFormProps) {
         name="endDate"
         type="date"
         error={state.errors?.endDate}
-        defaultValue={project?.endDate?.slice(0, 10)}
+        defaultValue={
+          state.values?.endDate?.slice(0, 10) ?? project?.endDate?.slice(0, 10)
+        }
       />
 
       <div className="flex justify-end gap-4 mt-4">

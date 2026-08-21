@@ -16,12 +16,20 @@ type ProjectActionState = {
   success: boolean;
   message: string;
   errors?: ErrorObject;
+  values?: {
+    name?: string;
+    key?: string;
+    description?: string;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+  };
 };
 export const createProject = async (
   prevState: ProjectActionState,
   formData: FormData,
 ): Promise<ProjectActionState> => {
-  console.log("helllo", formData.get("projectId"));
+  console.log("hello", formData.get("projectId"));
   const data = {
     name: formData.get("name"),
     key: formData.get("key"),
@@ -44,6 +52,14 @@ export const createProject = async (
       success: false,
       message: "Please fix the errors",
       errors,
+      values: {
+        name: String(formData.get("name") ?? ""),
+        key: String(formData.get("key") ?? ""),
+        description: String(formData.get("description") ?? ""),
+        status: String(formData.get("status") ?? ""),
+        startDate: String(formData.get("startDate") ?? ""),
+        endDate: String(formData.get("endDate") ?? ""),
+      },
     };
   }
   await dbConnect();
@@ -108,6 +124,14 @@ export const updateProject = async (
       success: false,
       message: "Please fix the errors",
       errors,
+      values: {
+        name: String(formData.get("name") ?? ""),
+        key: String(formData.get("key") ?? ""),
+        description: String(formData.get("description") ?? ""),
+        status: String(formData.get("status") ?? ""),
+        startDate: String(formData.get("startDate") ?? ""),
+        endDate: String(formData.get("endDate") ?? ""),
+      },
     };
   }
 
