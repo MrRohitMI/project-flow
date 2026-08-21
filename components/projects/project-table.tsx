@@ -18,31 +18,39 @@ export default async function ProjectTable() {
           </tr>
         </thead>
         <tbody>
-          {projects.map((project) => (
-            <tr key={project._id.toString()}>
-              <td>{project.name}</td>
-              <td>{project.key}</td>
-              <td>{project.description}</td>
-              <td>{project.status}</td>
-              <td>
-                <ProjectActions
-                  projectId={project._id.toString()}
-                  project={{
-                    name: project.name,
-                    key: project.key,
-                    description: project.description,
-                    status: project.status,
-                    startDate: project.startDate
-                      ? project.startDate.toISOString()
-                      : null,
-                    endDate: project.endDate
-                      ? project.endDate.toISOString()
-                      : null,
-                  }}
-                />
+          {projects.length === 0 ? (
+            <tr>
+              <td colSpan={5} className="py-8 text-center text-gray-500">
+                No projects found
               </td>
             </tr>
-          ))}
+          ) : (
+            projects.map((project) => (
+              <tr key={project._id.toString()}>
+                <td>{project.name}</td>
+                <td>{project.key}</td>
+                <td>{project.description}</td>
+                <td>{project.status}</td>
+                <td>
+                  <ProjectActions
+                    projectId={project._id.toString()}
+                    project={{
+                      name: project.name,
+                      key: project.key,
+                      description: project.description,
+                      status: project.status,
+                      startDate: project.startDate
+                        ? project.startDate.toISOString()
+                        : null,
+                      endDate: project.endDate
+                        ? project.endDate.toISOString()
+                        : null,
+                    }}
+                  />
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </SectionCard>
