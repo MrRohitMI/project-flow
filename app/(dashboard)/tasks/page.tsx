@@ -1,3 +1,3 @@
 export default function TasksPage() {
-   return <>Tasks Page</>
+   return <>Tasks</>
 }
