@@ -29,7 +29,6 @@ export const createProject = async (
   prevState: ProjectActionState,
   formData: FormData,
 ): Promise<ProjectActionState> => {
-  console.log("hello", formData.get("projectId"));
   const data = {
     name: formData.get("name"),
     key: formData.get("key"),

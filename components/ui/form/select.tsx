@@ -2,7 +2,7 @@ import type { SelectHTMLAttributes } from "react";
 type SelectLayout = "vertical" | "horizontal";
 type SelectOption = {
   label: string;
-  value: string;
+  value: string | number;
 };
 type SelectComponentProps = SelectHTMLAttributes<HTMLSelectElement> & {
   label?: string;
