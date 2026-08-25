@@ -34,12 +34,12 @@ type TaskFormProps = {
     priority: "low" | "medium" | "high";
     dueDate: string | null;
   };
-  onSuccess?: () => void;
+  onClose?: () => void;
 };
 export default function TaskForm({
   projectOptions,
   task,
-  onSuccess,
+  onClose,
 }: TaskFormProps) {
   const action = task ? updateTask : createTask;
   const [state, formAction, isPending] = useActionState(action, {
@@ -52,7 +52,7 @@ export default function TaskForm({
     if (state.success) {
       router.refresh();
       dispatch(setSuccessMessage(state.message));
-      onSuccess?.();
+      onClose?.();
     }
   }, [state.success, state.message, router, dispatch]);
   return (
@@ -110,8 +110,14 @@ export default function TaskForm({
           {state.message}
         </p>
       )}
-      <Button>{isPending ? "...Submitting" : "Submit"}</Button>
-      <Button variant="secondary">Cancel</Button>
+      <div className="flex justify-end gap-4 mt-4">
+        <Button disabled={isPending}>
+          {isPending ? "Submitting" : "Submit"}
+        </Button>
+        <Button variant="secondary" type="button" onClick={onClose}>
+          Cancel
+        </Button>
+      </div>
     </form>
   );
 }

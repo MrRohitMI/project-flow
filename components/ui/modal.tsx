@@ -1,7 +1,18 @@
 import { X } from "lucide-react";
 import Button from "./button";
-
-export default function Modal({ open, onClose, children,className = "" }) {
+import { ReactNode } from "react";
+type ModalProps = {
+  open: boolean;
+  onClose: () => void;
+  children: ReactNode;
+  className?: string;
+};
+export default function Modal({
+  open,
+  onClose,
+  children,
+  className = "",
+}: ModalProps) {
   return (
     <div
       onClick={onClose}

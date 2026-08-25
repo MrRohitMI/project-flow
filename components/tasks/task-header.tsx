@@ -60,7 +60,7 @@ export default function TaskHeader({
       >
         <TaskForm
           projectOptions={projectOptions}
-          onSuccess={() => {
+          onClose={() => {
             setOpen(false);
           }}
         />

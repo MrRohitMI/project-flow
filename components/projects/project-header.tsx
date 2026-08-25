@@ -53,7 +53,7 @@ export default function ProjectHeader() {
       >
         <div>
           <ProjectForm
-            onSuccess={() => {
+            onClose={() => {
               setOpen(false);
             }}
           />
