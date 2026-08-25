@@ -19,9 +19,9 @@ type ProjectFormProps = {
     startDate: string | null;
     endDate: string | null;
   };
-  onSuccess?: () => void;
+  onClose?: () => void;
 };
-export default function ProjectForm({ project, onSuccess }: ProjectFormProps) {
+export default function ProjectForm({ project, onClose }: ProjectFormProps) {
   const action = project ? updateProject : createProject;
   const [state, formAction, isPending] = useActionState(action, {
     success: false,
@@ -38,7 +38,7 @@ export default function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     if (state.success) {
       router.refresh();
       dispatch(setSuccessMessage(state.message));
-      onSuccess?.();
+      onClose?.();
     }
   }, [state.success, state.message, router, dispatch]);
   return (
@@ -104,7 +104,7 @@ export default function ProjectForm({ project, onSuccess }: ProjectFormProps) {
         <Button disabled={isPending}>
           {isPending ? "Submitting" : "Submit"}
         </Button>
-        <Button variant="secondary" type="button">
+        <Button variant="secondary" type="button" onClick={onClose}>
           Cancel
         </Button>
       </div>

@@ -62,7 +62,7 @@ export default function ProjectActions({
       >
         <ProjectForm
           project={{ id: projectId, ...project }}
-          onSuccess={() => {
+          onClose={() => {
             setOpen(false);
           }}
         />

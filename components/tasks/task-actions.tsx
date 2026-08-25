@@ -71,7 +71,7 @@ export default function TaskActions({
         <TaskForm
           projectOptions={projectOptions}
           task={{ id: taskId, ...task }}
-          onSuccess={() => {
+          onClose={() => {
             setOpen(false);
           }}
         />
