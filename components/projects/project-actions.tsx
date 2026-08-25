@@ -49,10 +49,10 @@ export default function ProjectActions({
   };
   return (
     <div className="flex gap-2">
-      <Button onClick={() => setOpen(true)} disabled={isDeleting}>
+      <Button onClick={() => setOpen(true)} >
         <SquarePen size={18} />
       </Button>
-      <Button variant="danger" onClick={handleDelete}>
+      <Button variant="danger" onClick={handleDelete} disabled={isDeleting}>
         {isDeleting ? <LoaderCircle size={18} /> : <Trash2 size={18} />}
       </Button>
       <Modal

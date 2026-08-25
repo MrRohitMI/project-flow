@@ -11,7 +11,7 @@ export const taskSchema = z.object({
     .min(1, { error: "Description must be at least 1 character" })
     .max(255, { error: "Description cannot exceed 255 characters" })
     .optional(),
-  status: z.enum(["todo", "in-progress", "in-review", "done"]),
+  status: z.enum(["todo", "in_progress", "in_review", "done"]),
   priority: z.enum(["low", "medium", "high"]),
   projectId: z
     .string({ error: "Project is required" })

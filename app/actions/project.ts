@@ -64,7 +64,6 @@ export const createProject = async (
   await dbConnect();
   try {
     const project = await Project.create(result.data);
-    console.log("Project Created", project);
     return {
       success: true,
       message: "Project received successfully",

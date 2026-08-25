@@ -1,6 +1,6 @@
 import mongoose, {Schema,Document,Types} from "mongoose";
 
-type StatusTypes = "todo" | "in-progress" | "in-review" | "done";
+type StatusTypes = "todo" | "in_progress" | "in_review" | "done";
 
 type PriorityTypes = "low" | "medium" | "high";
 
@@ -29,7 +29,7 @@ const TaskSchema: Schema<Task> = new Schema({
     },
     status: {
         type:String,
-        enum: ["todo","in-progress","in-review","done"],
+        enum: ["todo","in_progress","in_review","done"],
         default: "todo"
     },
     priority: {
