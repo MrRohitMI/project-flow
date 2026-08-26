@@ -42,7 +42,7 @@ export async function createTask(
   const result = taskSchema.safeParse(data);
   if (!result.success) {
     const errors: ErrorObject = {};
-    console.log(result.error?.issues);
+
     result.error?.issues.map((issue) => {
       const field = issue.path[0];
       errors[field as keyof ErrorObject] = issue.message;
@@ -95,9 +95,30 @@ export async function createTask(
     };
   }
 }
-export async function getTasks() {
+export async function getTasks(
+  search?: string,
+  status?: string,
+  priority?: string,
+  project?: string,
+) {
   await dbConnect();
-  const tasks = await Task.find().populate("projectId", "name");
+  const query: any = {};
+  if (search) {
+    query.title = {
+      $regex: search,
+      $options: "i",
+    };
+  }
+  if (status) {
+    query.status = status;
+  }
+  if (priority) {
+    query.priority = priority;
+  }
+  if (project) {
+    query.projectId = project;
+  }
+  const tasks = await Task.find(query).populate("projectId", "name");
   return tasks;
 }
 export async function updateTask(

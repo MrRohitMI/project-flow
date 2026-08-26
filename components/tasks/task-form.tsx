@@ -7,22 +7,8 @@ import Button from "../ui/button";
 import { useAppDispatch } from "@/store/hooks";
 import { useRouter } from "next/navigation";
 import { setSuccessMessage } from "@/store/slices/uiSlice";
-type OptionsTypes = {
-  label: string;
-  value: string;
-};
+import { OptionsTypes, priorityOptions, statusOptions } from "./tasks-options-constant";
 
-const statusOptions: OptionsTypes[] = [
-  { label: "TODO", value: "todo" },
-  { label: "IN_PROGRESS", value: "in_progress" },
-  { label: "IN_REVIEW", value: "in_review" },
-  { label: "DONE", value: "done" },
-];
-const priorityOptions: OptionsTypes[] = [
-  { label: "Low", value: "low" },
-  { label: "Medium", value: "medium" },
-  { label: "High", value: "high" },
-];
 type TaskFormProps = {
   projectOptions: OptionsTypes[];
   task?: {

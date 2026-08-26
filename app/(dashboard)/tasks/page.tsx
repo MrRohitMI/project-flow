@@ -1,7 +1,21 @@
 import TaskHeader from "@/components/tasks/task-header";
 import { getProjects } from "@/app/actions/project";
 import TaskTable from "@/components/tasks/task-table";
-export default async function TasksPage() {
+export default async function TasksPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    search?: string;
+    status?: string;
+    priority?: string;
+    project?: string;
+  }>;
+}) {
+  const params = await searchParams;
+  const search = params.search;
+  const status = params.status;
+  const priority = params.priority;
+  const project = params.project;
   const projects = await getProjects();
   const projectOptions = projects.map((project) => {
     return {
@@ -9,11 +23,17 @@ export default async function TasksPage() {
       value: project._id.toString(),
     };
   });
-  
+
   return (
     <>
       <TaskHeader projectOptions={projectOptions} />
-      <TaskTable projectOptions={projectOptions} />
+      <TaskTable
+        projectOptions={projectOptions}
+        search={search}
+        status={status}
+        priority={priority}
+        project={project}
+      />
     </>
   );
 }
