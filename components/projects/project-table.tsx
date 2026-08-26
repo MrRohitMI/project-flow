@@ -1,9 +1,12 @@
 import { getProjects } from "@/app/actions/project";
 import SectionCard from "../ui/section-card";
 import ProjectActions from "./project-actions";
-
-export default async function ProjectTable() {
-  const projects = await getProjects();
+type ProjectTableProps = {
+  search?: string;
+  status?: string;
+}
+export default async function ProjectTable({search,status}:ProjectTableProps) {
+  const projects = await getProjects(search,status);
 
   return (
     <SectionCard id="projects">

@@ -77,9 +77,25 @@ export const createProject = async (
     };
   }
 };
-export const getProjects = async () => {
+export const getProjects = async (search?: string, status?: string) => {
   await dbConnect();
-  const projects = await Project.find().lean();
+  const query: any = {};
+
+  if (search) {
+    query.$or = [
+      {
+        name: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+      { key: { $regex: search, $options: "i" } },
+    ];
+  }
+  if (status) {
+    query.status = status;
+  }
+  const projects = await Project.find(query).lean();
   return projects;
 };
 

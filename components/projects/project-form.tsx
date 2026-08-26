@@ -8,6 +8,7 @@ import Select from "../ui/form/select";
 import { useAppDispatch } from "@/store/hooks";
 import { useRouter } from "next/navigation";
 import { setSuccessMessage } from "@/store/slices/uiSlice";
+import { statusOptions } from "./projects-options-constant";
 
 type ProjectFormProps = {
   project?: {
@@ -29,11 +30,7 @@ export default function ProjectForm({ project, onClose }: ProjectFormProps) {
   });
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const statusOptions = [
-    { label: "Active", value: "active" },
-    { label: "Completed", value: "completed" },
-    { label: "Archived", value: "archived" },
-  ];
+
   useEffect(() => {
     if (state.success) {
       router.refresh();
