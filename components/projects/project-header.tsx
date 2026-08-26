@@ -6,9 +6,16 @@ import Modal from "../ui/modal";
 import ProjectForm from "./project-form";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearMessages } from "@/store/slices/uiSlice";
+import Input from "../ui/form/input";
+import { useRouter } from "next/navigation";
+import Select from "../ui/form/select";
+import { statusOptions } from "./projects-options-constant";
 
 export default function ProjectHeader() {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const successMessage = useAppSelector((store) => store.ui.successMessage);
   const errorMessage = useAppSelector((store) => store.ui.errorMessage);
@@ -23,6 +30,33 @@ export default function ProjectHeader() {
       clearTimeout(timer);
     };
   }, [successMessage, errorMessage, dispatch]);
+  const updateParams = (
+    params: URLSearchParams,
+    key: string,
+    value: string,
+  ) => {
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+  };
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    updateParams(params, "search", search);
+
+    const timer = setTimeout(() => {
+      router.push(params.toString() ? `?${params.toString()}` : "/projects");
+    }, 300);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search, router]);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    updateParams(params, "status", status);
+    router.push(params.toString() ? `?${params.toString()}` : "/projects");
+  }, [router, status]);
   return (
     <>
       <div className="flex items-center justify-between px-2">
@@ -46,6 +80,24 @@ export default function ProjectHeader() {
           <p className="text-md text-red-900">{errorMessage}</p>
         </div>
       )}
+      <div className="flex gap-2 mx-3 bg-gray-200 p-3 mb-3 rounded-md items-center">
+        <Select
+          placeholder="- Select Status -"
+          options={statusOptions}
+          wrapperClassName="w-1/3"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          className="bg-white"
+        />
+      </div>
+      <div className="flex justify-end pe-3">
+        <Input
+          placeholder="Search..."
+          wrapperClassName="w-1/3"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
