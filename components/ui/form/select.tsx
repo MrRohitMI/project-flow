@@ -4,6 +4,7 @@ type SelectOption = {
   label: string;
   value: string | number;
 };
+
 type SelectComponentProps = SelectHTMLAttributes<HTMLSelectElement> & {
   label?: string;
   error?: string;
@@ -11,7 +12,7 @@ type SelectComponentProps = SelectHTMLAttributes<HTMLSelectElement> & {
   wrapperClassName?: string;
   labelClassName?: string;
   placeholder?: string;
-  options: SelectOption[];
+  options: SelectOption[] | (string | number)[];
 };
 export default function Select({
   label,
@@ -26,7 +27,9 @@ export default function Select({
 }: SelectComponentProps) {
   const isHorizontal = layout === "horizontal";
   return (
-    <div className={`mb-2 ${isHorizontal ? "flex items-center gap-4" : "space-y-1"} ${wrapperClassName ?? ""}`}>
+    <div
+      className={`mb-2 ${isHorizontal ? "flex items-center gap-4" : "space-y-1"} ${wrapperClassName ?? ""}`}
+    >
       {label && (
         <label
           className={`${isHorizontal ? "w-32 shrink-0" : ""} text-md text-gray-600 ${labelClassName ?? ""}`}
@@ -42,11 +45,21 @@ export default function Select({
                focus:ring-blue-100 ${error ? "border-red-500" : ""} ${className ?? ""}`}
       >
         {placeholder && <option value="">{placeholder}</option>}
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
+        {options.map((option) => {
+          if (typeof option === "object") {
+            return (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            );
+          }
+
+          return (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          );
+        })}
       </select>
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
