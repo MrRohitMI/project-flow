@@ -1,13 +1,22 @@
 import { getProjects } from "@/app/actions/project";
 import SectionCard from "../ui/section-card";
 import ProjectActions from "./project-actions";
+import Pagination from "../ui/pagination";
 type ProjectTableProps = {
   search?: string;
   status?: string;
-}
-export default async function ProjectTable({search,status}:ProjectTableProps) {
-  const projects = await getProjects(search,status);
+  page: number;
+  limit: number;
+};
+export default async function ProjectTable({
+  search,
+  status,
+  page,
+  limit,
+}: ProjectTableProps) {
+  const { projects, total } = await getProjects(search, status, page, limit);
 
+  const totalPages = Math.ceil(total / limit);
   return (
     <SectionCard id="projects">
       <table className="app-table">
@@ -56,6 +65,8 @@ export default async function ProjectTable({search,status}:ProjectTableProps) {
           )}
         </tbody>
       </table>
+
+      {totalPages > 1 && <Pagination page={page} totalPages={totalPages} pageName="projects" />}
     </SectionCard>
   );
 }
