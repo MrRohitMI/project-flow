@@ -13,8 +13,8 @@ export default function StatCard({ card }: { card: Card }) {
            border-gray-400 p-3 shadow-sm hover:shadow-md"
     >
       <div className="flex gap-3">
-        <Icon />
-        <h3 className="font-bold text-xl">{card.label}</h3>
+        <Icon className="shrink-0"/>
+        <h3 className="font-bold text-xl wrap-break-word">{card.label}</h3>
       </div>
 
       <p className="font-bold text-gray-500">{card.count}</p>

@@ -96,7 +96,7 @@ export default function TaskForm({
           {state.message}
         </p>
       )}
-      <div className="flex justify-end gap-4 mt-4">
+      <div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-4">
         <Button disabled={isPending}>
           {isPending ? "Submitting" : "Submit"}
         </Button>

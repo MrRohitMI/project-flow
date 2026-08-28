@@ -20,54 +20,59 @@ export default async function ProjectTable({
   const totalPages = Math.ceil(total / limit);
   return (
     <SectionCard id="projects">
-      <table className="app-table">
-        <thead>
-          <tr>
-            <th>Project Name</th>
-            <th>Key</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th className="whitespace-nowrap w-1">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projects.length === 0 ? (
+      <div className="overflow-x-auto">
+        <table className="app-table">
+          <thead>
             <tr>
-              <td colSpan={5} className="py-8 text-center text-gray-500">
-                No projects found
-              </td>
+              <th>Project Name</th>
+              <th>Key</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th className="whitespace-nowrap">Action</th>
             </tr>
-          ) : (
-            projects.map((project) => (
-              <tr key={project._id.toString()}>
-                <td>{project.name}</td>
-                <td>{project.key}</td>
-                <td>{project.description}</td>
-                <td><Badge status={project.status.toUpperCase()}/></td>
-                <td>
-                  <ProjectActions
-                    projectId={project._id.toString()}
-                    project={{
-                      name: project.name,
-                      key: project.key,
-                      description: project.description,
-                      status: project.status,
-                      startDate: project.startDate
-                        ? project.startDate.toISOString()
-                        : null,
-                      endDate: project.endDate
-                        ? project.endDate.toISOString()
-                        : null,
-                    }}
-                  />
+          </thead>
+          <tbody>
+            {projects.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="py-8 text-center text-gray-500">
+                  No projects found
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-
-      {totalPages > 1 && <Pagination page={page} totalPages={totalPages} pageName="projects" />}
+            ) : (
+              projects.map((project) => (
+                <tr key={project._id.toString()}>
+                  <td>{project.name}</td>
+                  <td>{project.key}</td>
+                  <td>{project.description}</td>
+                  <td>
+                    <Badge status={project.status.toUpperCase()} />
+                  </td>
+                  <td>
+                    <ProjectActions
+                      projectId={project._id.toString()}
+                      project={{
+                        name: project.name,
+                        key: project.key,
+                        description: project.description,
+                        status: project.status,
+                        startDate: project.startDate
+                          ? project.startDate.toISOString()
+                          : null,
+                        endDate: project.endDate
+                          ? project.endDate.toISOString()
+                          : null,
+                      }}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+      {totalPages > 1 && (
+        <Pagination page={page} totalPages={totalPages} pageName="projects" />
+      )}
     </SectionCard>
   );
 }

@@ -46,7 +46,7 @@ export default async function Dashboard() {
       icon: Check,
     },
   ];
- 
+
   return (
     <div>
       <section id="title" className="mb-4 px-3 pt-3">
@@ -64,46 +64,50 @@ export default async function Dashboard() {
         ))}
       </section>
       <SectionCard id="project-stats" title="Recent Projects">
-        <table className="app-table">
-          <thead>
-            <tr>
-              <th>Project Name</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentProjects.map((project) => (
-              <tr key={project.id}>
-                <td>{project.name}</td>
-                <td>
-                  <Badge status={project.status.toUpperCase()} />
-                </td>
+        <div className="overflow-x-auto">
+          <table className="app-table">
+            <thead>
+              <tr>
+                <th>Project Name</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {recentProjects.map((project) => (
+                <tr key={project.id}>
+                  <td>{project.name}</td>
+                  <td>
+                    <Badge status={project.status.toUpperCase()} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </SectionCard>
       <SectionCard id="tasks" title="Recent Tasks">
-        <table className="app-table">
-          <thead>
-            <tr>
-              <th>Task</th>
-              <th>Project</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentTasks.map((task) => (
-              <tr key={task.id}>
-                <td>{task.title}</td>
-                <td>{task.projectId.name}</td>
-                <td>
-                  <Badge status={task.status.toUpperCase()} />
-                </td>
+        <div className="overflow-x-auto">
+          <table className="app-table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Project</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {recentTasks.map((task) => (
+                <tr key={task.id}>
+                  <td>{task.title}</td>
+                  <td>{task.projectId.name}</td>
+                  <td>
+                    <Badge status={task.status.toUpperCase()} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </SectionCard>
     </div>
   );
