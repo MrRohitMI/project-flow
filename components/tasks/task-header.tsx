@@ -24,6 +24,7 @@ export default function TaskHeader({
   const [status, setStatus] = useState("");
   const [priority, setPriority] = useState("");
   const [project, setProject] = useState("");
+  const [limit, setLimit] = useState("10");
   const router = useRouter();
   const dispatch = useAppDispatch();
   const successMessage = useAppSelector((store) => store.ui.successMessage);
@@ -58,7 +59,7 @@ export default function TaskHeader({
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     updateParams(params, "search", search);
-
+    params.set("page", "1");
     const timer = setTimeout(() => {
       router.push(params.toString() ? `?${params.toString()}` : "/tasks");
     }, 300);
@@ -71,8 +72,10 @@ export default function TaskHeader({
     updateParams(params, "status", status);
     updateParams(params, "priority", priority);
     updateParams(params, "project", project);
+    updateParams(params, "limit", limit);
+    params.set("page", "1");
     router.push(params.toString() ? `?${params.toString()}` : "/tasks");
-  }, [router, status, priority, project]);
+  }, [router, status, priority, project, limit]);
   return (
     <>
       <div className="flex items-center justify-between px-2">
@@ -127,12 +130,20 @@ export default function TaskHeader({
           </Button>
         </div>
       </div>
-      <div className="flex justify-end pe-3">
+      <div className="flex justify-between mx-3 px-3 bg-gray-100 
+      items-center py-2 rounded-lg border border-gray-200">
+        <Select
+          options={[10, 20, 50, 100]}
+          value={limit}
+          onChange={(e) => setLimit(e.target.value)}
+          className="bg-white"
+        />
         <Input
           placeholder="Search..."
           wrapperClassName="w-1/3"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          className="bg-white"
         />
       </div>
       <Modal

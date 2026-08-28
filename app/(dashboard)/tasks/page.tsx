@@ -9,6 +9,8 @@ export default async function TasksPage({
     status?: string;
     priority?: string;
     project?: string;
+    page: string;
+    limit: string;
   }>;
 }) {
   const params = await searchParams;
@@ -16,6 +18,8 @@ export default async function TasksPage({
   const status = params.status;
   const priority = params.priority;
   const project = params.project;
+  const limit = Number(params.limit);
+  const page = Number(params.page) || 1;
   const projects = await getProjects();
   const projectOptions = projects.map((project) => {
     return {
@@ -33,6 +37,8 @@ export default async function TasksPage({
         status={status}
         priority={priority}
         project={project}
+        page={page}
+        limit={limit}
       />
     </>
   );

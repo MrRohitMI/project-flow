@@ -100,6 +100,8 @@ export async function getTasks(
   status?: string,
   priority?: string,
   project?: string,
+  page: number = 1,
+  limit: number = 10,
 ) {
   await dbConnect();
   const query: any = {};
@@ -118,8 +120,13 @@ export async function getTasks(
   if (project) {
     query.projectId = project;
   }
-  const tasks = await Task.find(query).populate("projectId", "name");
-  return tasks;
+  const total = await Task.countDocuments(query);
+  const skip = (page - 1) * limit;
+  const tasks = await Task.find(query)
+    .populate("projectId", "name")
+    .skip(skip)
+    .limit(limit);
+  return { tasks, total };
 }
 export async function updateTask(
   prevState: TaskActionState,
