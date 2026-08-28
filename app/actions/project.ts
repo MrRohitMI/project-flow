@@ -77,7 +77,12 @@ export const createProject = async (
     };
   }
 };
-export const getProjects = async (search?: string, status?: string) => {
+export const getProjects = async (
+  search?: string,
+  status?: string,
+  page: number = 1,
+  limit: number = 10,
+) => {
   await dbConnect();
   const query: any = {};
 
@@ -95,8 +100,10 @@ export const getProjects = async (search?: string, status?: string) => {
   if (status) {
     query.status = status;
   }
-  const projects = await Project.find(query).lean();
-  return projects;
+  const total = await Project.countDocuments(query);
+  const skip = (page - 1) * limit;
+  const projects = await Project.find(query).skip(skip).limit(limit);
+  return { projects, total };
 };
 
 export const updateProject = async (

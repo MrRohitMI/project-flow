@@ -22,7 +22,7 @@ export default async function TaskTable({
   priority,
   project,
   page,
-  limit
+  limit,
 }: TaskTableProps) {
   const { tasks, total } = await getTasks(
     search,
@@ -84,7 +84,9 @@ export default async function TaskTable({
             )}
           </tbody>
         </table>
-        {totalPages > 1 && <Pagination page={page} totalPages={totalPages} />}
+        {totalPages > 1 && (
+          <Pagination page={page} totalPages={totalPages} pageName="tasks" />
+        )}
       </SectionCard>
     </>
   );

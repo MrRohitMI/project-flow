@@ -18,9 +18,9 @@ export default async function TasksPage({
   const status = params.status;
   const priority = params.priority;
   const project = params.project;
-  const limit = Number(params.limit);
+  const limit = Number(params.limit) || 10;
   const page = Number(params.page) || 1;
-  const projects = await getProjects();
+  const {projects} = await getProjects();
   const projectOptions = projects.map((project) => {
     return {
       label: `${project.name} - ${project.key}`,

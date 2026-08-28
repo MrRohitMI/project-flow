@@ -4,24 +4,25 @@ import { useRouter } from "next/navigation";
 type PaginationProps = {
   page: number;
   totalPages: number;
+  pageName: string
 };
-export default function Pagination({ page, totalPages }: PaginationProps) {
+export default function Pagination({ page, totalPages ,pageName}: PaginationProps) {
   const router = useRouter();
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-  console.log(pages);
   const handlePagination = (pageNumber: number) => {
     const params = new URLSearchParams(window.location.search);
     params.set("page", pageNumber.toString());
-    router.push(`/tasks?${params.toString()}`);
+    router.push(`/${pageName}?${params.toString()}`);
   };
-
+  const prevNextClass =
+    "rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium" +
+    "text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed";
   return (
     <div className="flex items-center justify-center gap-2 my-4">
       <button
         disabled={page === 1}
         onClick={() => handlePagination(page - 1)}
-        className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 
-        transition-colors hover:bg-gray-100 disabled:cursor-not-allowed"
+        className={prevNextClass}
       >
         Prev
       </button>
@@ -41,8 +42,7 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
       <button
         disabled={page === totalPages}
         onClick={() => handlePagination(page + 1)}
-        className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 
-        transition-colors hover:bg-gray-100 disabled:cursor-not-allowed"
+        className={prevNextClass}
       >
         Next
       </button>

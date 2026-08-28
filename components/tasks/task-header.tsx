@@ -34,17 +34,6 @@ export default function TaskHeader({
     setPriority("");
     setProject("");
   };
-  useEffect(() => {
-    if (!successMessage && !errorMessage) {
-      return;
-    }
-    const timer = setTimeout(() => {
-      dispatch(clearMessages());
-    }, 3000);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [successMessage, errorMessage, dispatch]);
   const updateParams = (
     params: URLSearchParams,
     key: string,
@@ -56,6 +45,17 @@ export default function TaskHeader({
       params.delete(key);
     }
   };
+  useEffect(() => {
+    if (!successMessage && !errorMessage) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      dispatch(clearMessages());
+    }, 3000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [successMessage, errorMessage, dispatch]);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     updateParams(params, "search", search);
@@ -76,6 +76,11 @@ export default function TaskHeader({
     params.set("page", "1");
     router.push(params.toString() ? `?${params.toString()}` : "/tasks");
   }, [router, status, priority, project, limit]);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("limit", "10");
+    router.push(params.toString() ? `?${params.toString()}` : "/tasks");
+  }, []);
   return (
     <>
       <div className="flex items-center justify-between px-2">
@@ -130,8 +135,10 @@ export default function TaskHeader({
           </Button>
         </div>
       </div>
-      <div className="flex justify-between mx-3 px-3 bg-gray-100 
-      items-center py-2 rounded-lg border border-gray-200">
+      <div
+        className="flex justify-between mx-3 px-3 bg-gray-100 
+      items-center py-2 rounded-lg border border-gray-200"
+      >
         <Select
           options={[10, 20, 50, 100]}
           value={limit}
