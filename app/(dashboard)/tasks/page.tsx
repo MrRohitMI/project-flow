@@ -9,8 +9,8 @@ export default async function TasksPage({
     status?: string;
     priority?: string;
     project?: string;
-    page: string;
-    limit: string;
+    page?: string;
+    limit?: string;
   }>;
 }) {
   const params = await searchParams;

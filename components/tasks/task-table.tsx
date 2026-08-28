@@ -38,57 +38,59 @@ export default async function TaskTable({
   return (
     <>
       <SectionCard>
-        <table className="app-table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Project</th>
-              <th>Status</th>
-              <th>Priority</th>
-              <th className="whitespace-nowrap w-1">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.length === 0 ? (
+        <div className="overflow-x-auto">
+          <table className="app-table">
+            <thead>
               <tr>
-                <td colSpan={5} className="py-8 text-center text-gray-500">
-                  No tasks found
-                </td>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Project</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th className="whitespace-nowrap">Action</th>
               </tr>
-            ) : (
-              tasks.map((task) => (
-                <tr key={task._id.toString()}>
-                  <td>{task.title}</td>
-                  <td>{task.description}</td>
-                  <td>{task.projectId.name}</td>
-                  <td>
-                    <Badge status={task.status.toUpperCase()} />
-                  </td>
-                  <td>
-                    <Badge status={task.priority.toUpperCase()} />
-                  </td>
-                  <td>
-                    <TaskActions
-                      taskId={task._id.toString()}
-                      projectOptions={projectOptions}
-                      task={{
-                        title: task.title,
-                        description: task.description,
-                        projectId: task.projectId._id.toString(),
-                        status: task.status,
-                        priority: task.priority,
-                        dueDate: task.dueDate
-                          ? task.dueDate.toISOString()
-                          : null,
-                      }}
-                    />
+            </thead>
+            <tbody>
+              {tasks.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-8 text-center text-gray-500">
+                    No tasks found
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                tasks.map((task) => (
+                  <tr key={task._id.toString()}>
+                    <td>{task.title}</td>
+                    <td>{task.description}</td>
+                    <td>{task.projectId.name}</td>
+                    <td>
+                      <Badge status={task.status.toUpperCase()} />
+                    </td>
+                    <td>
+                      <Badge status={task.priority.toUpperCase()} />
+                    </td>
+                    <td>
+                      <TaskActions
+                        taskId={task._id.toString()}
+                        projectOptions={projectOptions}
+                        task={{
+                          title: task.title,
+                          description: task.description,
+                          projectId: task.projectId._id.toString(),
+                          status: task.status,
+                          priority: task.priority,
+                          dueDate: task.dueDate
+                            ? task.dueDate.toISOString()
+                            : null,
+                        }}
+                      />
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
         {totalPages > 1 && (
           <Pagination page={page} totalPages={totalPages} pageName="tasks" />
         )}
