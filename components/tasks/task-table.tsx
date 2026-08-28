@@ -2,6 +2,7 @@ import { getTasks } from "@/app/actions/tasks";
 import SectionCard from "../ui/section-card";
 import TaskActions from "./task-actions";
 import Pagination from "../ui/pagination";
+import Badge from "../ui/badge";
 type OptionProps = {
   label: string;
   value: string;
@@ -45,7 +46,7 @@ export default async function TaskTable({
               <th>Project</th>
               <th>Status</th>
               <th>Priority</th>
-              <th>Action</th>
+              <th className="whitespace-nowrap w-1">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -61,8 +62,12 @@ export default async function TaskTable({
                   <td>{task.title}</td>
                   <td>{task.description}</td>
                   <td>{task.projectId.name}</td>
-                  <td>{task.status}</td>
-                  <td>{task.priority}</td>
+                  <td>
+                    <Badge status={task.status.toUpperCase()} />
+                  </td>
+                  <td>
+                    <Badge status={task.priority.toUpperCase()} />
+                  </td>
                   <td>
                     <TaskActions
                       taskId={task._id.toString()}
