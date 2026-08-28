@@ -1,6 +1,6 @@
+import { getDashboardStats } from "@/app/actions/dashboard";
 import SectionCard from "@/components/ui/section-card";
 import StatCard from "@/components/ui/stat-card";
-import StatusBadge from "@/components/ui/status-badge";
 import {
   Check,
   Folder,
@@ -8,85 +8,45 @@ import {
   LoaderCircle,
   type LucideIcon,
 } from "lucide-react";
+import Badge from "@/components/ui/badge";
 
-export default function Dashboard() {
+export default async function Dashboard() {
   type Card = {
     label: string;
     count: number;
     icon: LucideIcon;
   };
+  const {
+    totalProjects,
+    totalTasks,
+    inProgressTasks,
+    completedTasks,
+    recentProjects,
+    recentTasks,
+  } = await getDashboardStats();
   const cards: Card[] = [
     {
       label: "Projects",
-      count: 12,
+      count: totalProjects,
       icon: Folder,
     },
     {
       label: "Tasks",
-      count: 48,
+      count: totalTasks,
       icon: ListChecks,
     },
     {
-      label: "In Progress",
-      count: 15,
+      label: "In Progress Tasks",
+      count: inProgressTasks,
       icon: LoaderCircle,
     },
     {
-      label: "Completed",
-      count: 33,
+      label: "Completed Tasks",
+      count: completedTasks,
       icon: Check,
     },
   ];
-  const projects = [
-    {
-      id: 1,
-      name: "Website Redesign",
-      status: "In Progress",
-    },
-    {
-      id: 2,
-      name: "E-commerce Platform ",
-      status: "Completed",
-    },
-    {
-      id: 3,
-      name: "Mobile Application",
-      status: "Planning",
-    },
-  ];
-  type Status = "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
-  type Task = {
-    id: number;
-    name: string;
-    projectName: string;
-    status: Status;
-  };
-  const tasks: Task[] = [
-    {
-      id: 1,
-      name: "Create login page",
-      projectName: "Website",
-      status: "TODO",
-    },
-    {
-      id: 2,
-      name: "Build dashboard",
-      projectName: "CRM",
-      status: "IN_PROGRESS",
-    },
-    {
-      id: 3,
-      name: "Fix responsive issue",
-      projectName: "Mobile App",
-      status: "IN_REVIEW",
-    },
-    {
-      id: 4,
-      name: "Deploy Application",
-      projectName: "Website",
-      status: "DONE",
-    },
-  ];
+ 
   return (
     <div>
       <section id="title" className="mb-4 px-3 pt-3">
@@ -112,10 +72,12 @@ export default function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {projects.map((project) => (
+            {recentProjects.map((project) => (
               <tr key={project.id}>
                 <td>{project.name}</td>
-                <td>{project.status}</td>
+                <td>
+                  <Badge status={project.status.toUpperCase()} />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -131,12 +93,12 @@ export default function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {tasks.map((task) => (
+            {recentTasks.map((task) => (
               <tr key={task.id}>
-                <td>{task.name}</td>
-                <td>{task.projectName}</td>
+                <td>{task.title}</td>
+                <td>{task.projectId.name}</td>
                 <td>
-                  <StatusBadge status={task.status} />
+                  <Badge status={task.status.toUpperCase()} />
                 </td>
               </tr>
             ))}

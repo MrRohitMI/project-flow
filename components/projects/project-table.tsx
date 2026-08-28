@@ -2,6 +2,7 @@ import { getProjects } from "@/app/actions/project";
 import SectionCard from "../ui/section-card";
 import ProjectActions from "./project-actions";
 import Pagination from "../ui/pagination";
+import Badge from "../ui/badge";
 type ProjectTableProps = {
   search?: string;
   status?: string;
@@ -26,7 +27,7 @@ export default async function ProjectTable({
             <th>Key</th>
             <th>Description</th>
             <th>Status</th>
-            <th>Action</th>
+            <th className="whitespace-nowrap w-1">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +43,7 @@ export default async function ProjectTable({
                 <td>{project.name}</td>
                 <td>{project.key}</td>
                 <td>{project.description}</td>
-                <td>{project.status}</td>
+                <td><Badge status={project.status.toUpperCase()}/></td>
                 <td>
                   <ProjectActions
                     projectId={project._id.toString()}
