@@ -63,9 +63,12 @@ export default function ProjectHeader() {
   }, [router, status, limit]);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    params.set("limit", "10");
+    if (!params.has("limit")) {
+      params.set("limit", "10");
+      router.push(`?${params.toString()}`);
+    }
     router.push(params.toString() ? `?${params.toString()}` : "/projects");
-  }, []);
+  }, [router]);
   return (
     <>
       <div className="flex flex-col gap-2 px-2 sm:flex-row sm:items-center sm:justify-between">
