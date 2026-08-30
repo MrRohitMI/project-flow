@@ -92,7 +92,10 @@ export default function ProjectHeader() {
           <p className="text-md text-red-900">{errorMessage}</p>
         </div>
       )}
-      <div className="mx-3 mb-3 flex flex-col gap-2 rounded-md bg-gray-200 p-3 sm:flex-row sm:items-center">
+      <div
+        className="mx-3 mb-3 flex flex-col gap-2 rounded-md 
+      bg-gray-200 p-3 sm:flex-row sm:items-center"
+      >
         <Select
           placeholder="- Select Status -"
           options={statusOptions}
