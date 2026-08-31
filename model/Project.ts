@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 type StatusTypes = "active" | "completed" | "archived";
-export interface Project extends Document {
+interface Project extends Document {
   name: string;
   key: string;
   description: string;
