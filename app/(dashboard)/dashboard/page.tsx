@@ -74,7 +74,7 @@ export default async function Dashboard() {
             </thead>
             <tbody>
               {recentProjects.map((project) => (
-                <tr key={project.id}>
+                <tr key={project._id.toString()}>
                   <td>{project.name}</td>
                   <td>
                     <Badge status={project.status.toUpperCase()} />
@@ -97,7 +97,7 @@ export default async function Dashboard() {
             </thead>
             <tbody>
               {recentTasks.map((task) => (
-                <tr key={task.id}>
+                <tr key={task._id.toString()}>
                   <td>{task.title}</td>
                   <td>{task.projectId.name}</td>
                   <td>
