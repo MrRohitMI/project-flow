@@ -42,9 +42,15 @@ export async function getCurrentUser() {
   if (!token) {
     return null;
   }
-  const payload = await verifyToken(token);
-  if (!payload || typeof payload.userId !== "string") {
+  try {
+    const { payload } = await jwtVerify(token, secret);
+
+    return {
+      userId: payload.userId as string,
+      name: payload.name as string,
+      email: payload.email as string,
+    };
+  } catch {
     return null;
   }
-  return payload;
 }
