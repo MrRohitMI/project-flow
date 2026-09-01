@@ -3,6 +3,7 @@ import { registerUser } from "@/app/actions/auth";
 import Input from "../ui/form/input";
 import { useActionState } from "react";
 import Button from "../ui/button";
+import Link from "next/link";
 
 export default function RegisterForm() {
   const [state, formAction, isPending] = useActionState(registerUser, {
@@ -33,9 +34,18 @@ export default function RegisterForm() {
         type="password"
         error={state.errors?.password}
       />
-      <Button disabled={isPending}>
-        {isPending ? "Creating Account..." : "Register"}
-      </Button>
+      <div className="mt-6 flex justify-end gap-3">
+        <Link
+          href="/"
+          className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+        >
+          Cancel
+        </Link>
+
+        <Button disabled={isPending}>
+          {isPending ? "Creating Account..." : "Register"}
+        </Button>
+      </div>
 
       {state.message && (
         <p className={state.success ? "text-green-600" : "text-red-600"}>

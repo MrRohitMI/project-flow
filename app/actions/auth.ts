@@ -1,9 +1,16 @@
 "use server";
 
-import { comparePassword, hashPassword } from "@/lib/auth";
+import {
+  comparePassword,
+  generateToken,
+  getCurrentUser,
+  hashPassword,
+} from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import User from "@/model/User";
 import { loginSchema, userSchema } from "@/schemas/user.schema";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 type ErrorObject = { name?: string; email?: string; password?: string };
 type UserValues = {
@@ -125,9 +132,19 @@ export async function loginUser(
       },
     };
   }
-
-  return {
-    success: true,
-    message: "Login successful",
-  };
+  const token = await generateToken(user._id.toString(), user.name ,user.email);
+  const cookieStore = await cookies();
+  cookieStore.set("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  });
+  redirect("/dashboard");
+}
+export async function logoutUser() {
+  const cookieStore = await cookies();
+  cookieStore.delete("token");
+  redirect("/login");
 }
