@@ -73,14 +73,22 @@ export default async function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {recentProjects.map((project) => (
-                <tr key={project._id.toString()}>
-                  <td>{project.name}</td>
-                  <td>
-                    <Badge status={project.status.toUpperCase()} />
+              {recentProjects.length === 0 ? (
+                <tr>
+                  <td colSpan={2} className="py-8 text-center text-gray-500">
+                    No projects yet. Create your first project to see it here.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                recentProjects.map((project) => (
+                  <tr key={project._id.toString()}>
+                    <td>{project.name}</td>
+                    <td>
+                      <Badge status={project.status.toUpperCase()} />
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -96,15 +104,23 @@ export default async function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {recentTasks.map((task) => (
-                <tr key={task._id.toString()}>
-                  <td>{task.title}</td>
-                  <td>{task.projectId.name}</td>
-                  <td>
-                    <Badge status={task.status.toUpperCase()} />
+              {recentTasks.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="py-8 text-center text-gray-500">
+                    No tasks yet. Create your first task to see it here.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                recentTasks.map((task) => (
+                  <tr key={task._id.toString()}>
+                    <td>{task.title}</td>
+                    <td>{task.projectId.name}</td>
+                    <td>
+                      <Badge status={task.status.toUpperCase()} />
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

@@ -3,6 +3,7 @@
 import dbConnect from "@/lib/mongodb";
 import { projectSchema } from "@/schemas/project.schema";
 import Project from "@/model/Project";
+import { getCurrentUser } from "@/lib/auth";
 
 type ErrorObject = {
   name?: string;
@@ -26,7 +27,7 @@ type ProjectActionState = {
   };
 };
 export const createProject = async (
-  prevState: ProjectActionState,
+  _prevState: ProjectActionState,
   formData: FormData,
 ): Promise<ProjectActionState> => {
   const data = {
@@ -62,8 +63,15 @@ export const createProject = async (
     };
   }
   await dbConnect();
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return {
+      success: false,
+      message: "Unauthorized. Please login.",
+    };
+  }
   try {
-    await Project.create(result.data);
+    await Project.create({ ...result.data, userId: currentUser.userId });
     return {
       success: true,
       message: "Project received successfully",
@@ -84,7 +92,15 @@ export const getProjects = async (
   limit: number = 10,
 ) => {
   await dbConnect();
-  const query: any = {};
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return {
+      projects: [],
+      total: 0,
+    };
+  }
+  const query: any = { userId: currentUser.userId };
 
   if (search) {
     query.$or = [
@@ -157,12 +173,23 @@ export const updateProject = async (
   }
 
   await dbConnect();
+  const currentUser = await getCurrentUser();
 
+  if (!currentUser) {
+    return {
+      success: false,
+      message: "Unauthorized. Please login.",
+    };
+  }
   try {
-    const project = await Project.findByIdAndUpdate(projectId, result.data, {
-      new: true,
-      runValidators: true,
-    });
+    const project = await Project.findOneAndUpdate(
+      { _id: projectId, userId: currentUser.userId },
+      result.data,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!project) {
       return {
@@ -194,8 +221,19 @@ export const deleteProject = async (
     };
   }
   await dbConnect();
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return {
+      success: false,
+      message: "Unauthorized. Please login.",
+    };
+  }
   try {
-    const project = await Project.findByIdAndDelete(projectId);
+    const project = await Project.findOneAndDelete({
+      _id: projectId,
+      userId: currentUser.userId,
+    });
     if (!project) {
       return {
         success: false,
