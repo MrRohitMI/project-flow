@@ -1,12 +1,15 @@
 "use client";
 import { useActionState } from "react";
 import Input from "../ui/form/input";
-import { loginUser } from "@/app/actions/auth";
+import { loginUser, UserActionState } from "@/app/actions/auth";
 import Button from "../ui/button";
 import Link from "next/link";
 
 export default function LoginForm() {
-  const [state, formAction, isPending] = useActionState(loginUser, {
+  const [state, formAction, isPending] = useActionState<
+    UserActionState,
+    FormData
+  >(loginUser, {
     success: false,
     message: "",
   });

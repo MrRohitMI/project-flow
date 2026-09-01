@@ -3,7 +3,6 @@
 import {
   comparePassword,
   generateToken,
-  getCurrentUser,
   hashPassword,
 } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
@@ -19,14 +18,14 @@ type UserValues = {
   password: string;
 };
 
-type userActionState = {
+export type UserActionState = {
   success: boolean;
   message: string;
   errors?: ErrorObject;
   values?: UserValues;
 };
 export async function registerUser(
-  _prevState: userActionState,
+  _prevState: UserActionState,
   formData: FormData,
 ) {
   const data = {
@@ -82,7 +81,7 @@ export async function registerUser(
 }
 
 export async function loginUser(
-  _prevState: userActionState,
+  _prevState: UserActionState,
   formData: FormData,
 ) {
   const data = {
