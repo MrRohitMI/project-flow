@@ -91,7 +91,7 @@ export default function TaskForm({
       />
       {state.message && (
         <p
-          className={`text-sm ${!state.errors ? "text-green-600" : "text-red-600"}`}
+          className={`text-sm ${state.success ? "text-green-600" : "text-red-600"}`}
         >
           {state.message}
         </p>

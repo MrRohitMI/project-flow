@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
 type StatusTypes = "active" | "completed" | "archived";
 interface Project extends Document {
@@ -8,6 +8,7 @@ interface Project extends Document {
   status: StatusTypes;
   startDate?: Date;
   endDate?: Date;
+  userId: Types.ObjectId;
 }
 
 const ProjectSchema: Schema<Project> = new Schema(
@@ -42,7 +43,11 @@ const ProjectSchema: Schema<Project> = new Schema(
       enum: ["active", "completed", "archived"],
       default: "active",
     },
-
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
     startDate: {
       type: Date,
     },

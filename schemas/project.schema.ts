@@ -10,7 +10,8 @@ export const projectSchema = z
     key: z
       .string({ error: "Project Key is Required." })
       .trim()
-      .min(1, { error: "Project Key must be at least 1 character." }),
+      .min(1, { error: "Project Key must be at least 1 character." })
+      .max(10,{ error: "Project Key must be at most 10 character." }),
 
     description: z
       .string({ error: "Project Description is required." })

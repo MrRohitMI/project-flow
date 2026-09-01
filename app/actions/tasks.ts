@@ -1,5 +1,6 @@
 "use server";
 
+import { getCurrentUser } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import Project from "@/model/Project";
 import Task from "@/model/Task";
@@ -28,7 +29,7 @@ type TaskActionState = {
   };
 };
 export async function createTask(
-  prevState: TaskActionState,
+  _prevState: TaskActionState,
   formData: FormData,
 ): Promise<TaskActionState> {
   const data = {
@@ -71,7 +72,17 @@ export async function createTask(
       },
     };
   }
-  const project = await Project.findById(result.data.projectId);
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return {
+      success: false,
+      message: "Unauthorized. Please login.",
+    };
+  }
+  const project = await Project.findOne({
+    _id: result.data.projectId,
+    userId: currentUser.userId,
+  });
   if (!project) {
     return {
       success: false,
@@ -104,7 +115,20 @@ export async function getTasks(
   limit: number = 10,
 ) {
   await dbConnect();
-  const query: any = {};
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return {
+      tasks: [],
+      total: 0,
+    };
+  }
+  const userProjects = await Project.find({
+    userId: currentUser.userId,
+  }).select("_id");
+  const projectIds = userProjects.map((project) => project._id);
+
+  const query: any = { projectId: { $in: projectIds } };
   if (search) {
     query.title = {
       $regex: search,
@@ -118,6 +142,13 @@ export async function getTasks(
     query.priority = priority;
   }
   if (project) {
+    const isUserProject = projectIds.some((id) => id.toString() === project);
+    if (!isUserProject) {
+      return {
+        tasks: [],
+        total: 0,
+      };
+    }
     query.projectId = project;
   }
   const total = await Task.countDocuments(query);
@@ -129,7 +160,7 @@ export async function getTasks(
   return { tasks, total };
 }
 export async function updateTask(
-  prevState: TaskActionState,
+  _prevState: TaskActionState,
   formData: FormData,
 ): Promise<TaskActionState> {
   const taskId = formData.get("taskId");
@@ -140,7 +171,15 @@ export async function updateTask(
       message: "Task ID is required.",
     };
   }
-
+  if (!mongoose.Types.ObjectId.isValid(taskId)) {
+    return {
+      success: false,
+      message: "Invalid projectId.",
+      errors: {
+        projectId: "Invalid project selected.",
+      },
+    };
+  }
   const data = {
     title: formData.get("title"),
     description: formData.get("description"),
@@ -177,17 +216,24 @@ export async function updateTask(
       },
     };
   }
-  if (!mongoose.Types.ObjectId.isValid(result.data.projectId)) {
+
+  await dbConnect();
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
     return {
       success: false,
-      message: "Invalid projectId.",
-      errors: {
-        projectId: "Invalid project selected.",
-      },
+      message: "Unauthorized. Please login.",
     };
   }
-  await dbConnect();
-  const project = await Project.findById(result.data.projectId);
+  const userProjectIds = await Project.find({
+    userId: currentUser.userId,
+  }).distinct("_id");
+
+  const project = await Project.findOne({
+    _id: result.data.projectId,
+    userId: currentUser.userId,
+  });
 
   if (!project) {
     return {
@@ -200,8 +246,11 @@ export async function updateTask(
   }
 
   try {
-    const task = await Task.findByIdAndUpdate(
-      taskId,
+    const task = await Task.findOneAndUpdate(
+      {
+        _id: taskId,
+        projectId: { $in: userProjectIds },
+      },
       {
         ...result.data,
         projectId: project._id,
@@ -238,12 +287,28 @@ export async function deleteTask(taskId: string) {
   if (!mongoose.Types.ObjectId.isValid(taskId)) {
     return {
       success: false,
-      message: "Invalid task.",
+      message: "Invalid task ID.",
     };
   }
 
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return {
+      success: false,
+      message: "Unauthorized. Please login.",
+    };
+  }
+
+  const userProjectIds = await Project.find({
+    userId: currentUser.userId,
+  }).distinct("_id");
+
   try {
-    const task = await Task.findByIdAndDelete(taskId);
+    const task = await Task.findOneAndDelete({
+      _id: taskId,
+      projectId: { $in: userProjectIds },
+    });
 
     if (!task) {
       return {
