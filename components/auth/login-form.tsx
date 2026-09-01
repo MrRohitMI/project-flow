@@ -3,6 +3,7 @@ import { useActionState } from "react";
 import Input from "../ui/form/input";
 import { loginUser } from "@/app/actions/auth";
 import Button from "../ui/button";
+import Link from "next/link";
 
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginUser, {
@@ -27,9 +28,18 @@ export default function LoginForm() {
           type="password"
           error={state.errors?.password}
         />
-        <Button disabled={isPending}>
-          {isPending ? "Logging in..." : "Login"}
-        </Button>
+        <div className="mt-6 flex justify-end gap-3">
+          <Link
+            href="/"
+            className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+          >
+            Cancel
+          </Link>
+
+          <Button disabled={isPending}>
+            {isPending ? "Logging in..." : "Login"}
+          </Button>
+        </div>
 
         {state.message && (
           <p className={state.success ? "text-green-600" : "text-red-600"}>
