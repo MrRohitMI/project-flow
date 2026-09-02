@@ -6,7 +6,9 @@ export default function LandingNavbar() {
     <header>
       <nav className="flex items-center justify-between bg-blue-600">
         <div className="flex items-center">
-          <Image src="/images/logo.png" alt="logo" width={80} height={80} />
+          <Link href="/">
+            <Image src="/images/logo.png" alt="logo" width={80} height={80} />
+          </Link>
         </div>
 
         <div className="flex items-center gap-2 px-4">

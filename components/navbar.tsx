@@ -3,6 +3,7 @@ import { Menu } from "lucide-react";
 import Button from "./ui/button";
 import { logoutUser } from "@/app/actions/auth";
 import UserMenu from "./user-menu";
+import Link from "next/link";
 
 type NavbarProps = {
   currentUser: {
@@ -25,9 +26,11 @@ export default function Navbar({ onMenuClick, currentUser }: NavbarProps) {
             <Menu />
           </Button>
 
-          <Image src="/images/logo.png" alt="logo" width={80} height={80} />
+          <Link href="/dashboard">
+            <Image src="/images/logo.png" alt="logo" width={80} height={80} />
+          </Link>
         </div>
-        <UserMenu name={currentUser.name} email={currentUser.email}/>
+        <UserMenu name={currentUser.name} email={currentUser.email} />
       </nav>
     </header>
   );
