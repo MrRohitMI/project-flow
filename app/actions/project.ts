@@ -4,6 +4,7 @@ import dbConnect from "@/lib/mongodb";
 import { projectSchema } from "@/schemas/project.schema";
 import Project from "@/model/Project";
 import { getCurrentUser } from "@/lib/auth";
+import Task from "@/model/Task";
 
 type ErrorObject = {
   name?: string;
@@ -230,7 +231,7 @@ export const deleteProject = async (
     };
   }
   try {
-    const project = await Project.findOneAndDelete({
+    const project = await Project.findOne({
       _id: projectId,
       userId: currentUser.userId,
     });
@@ -240,6 +241,17 @@ export const deleteProject = async (
         message: "Project not found.",
       };
     }
+    const taskExists = await Task.exists({ projectId: project._id });
+    if (taskExists) {
+      return {
+        success: false,
+        message:
+          "This project has tasks assigned to it." +
+          "Please remove all associated tasks before deleting the project.",
+      };
+    }
+    await Project.findByIdAndDelete(project._id);
+
     return {
       success: true,
       message: "Project deleted successfully.",

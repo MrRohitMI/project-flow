@@ -7,7 +7,11 @@ import Button from "../ui/button";
 import { useAppDispatch } from "@/store/hooks";
 import { useRouter } from "next/navigation";
 import { setSuccessMessage } from "@/store/slices/uiSlice";
-import { OptionsTypes, priorityOptions, statusOptions } from "./tasks-options-constant";
+import {
+  OptionsTypes,
+  priorityOptions,
+  statusOptions,
+} from "./tasks-options-constant";
 
 type TaskFormProps = {
   projectOptions: OptionsTypes[];
@@ -49,14 +53,14 @@ export default function TaskForm({
         label="Title"
         placeholder="Enter Title"
         error={state.errors?.title}
-        defaultValue={task?.title}
+        defaultValue={state.values?.title ?? task?.title}
       />
       <Textarea
         name="description"
         label="Description"
         placeholder="Enter Description"
         error={state.errors?.description}
-        defaultValue={task?.description}
+        defaultValue={state.values?.description ?? task?.description}
       />
       <Select
         name="projectId"
@@ -64,7 +68,7 @@ export default function TaskForm({
         placeholder="Select Project"
         options={projectOptions}
         error={state.errors?.projectId}
-        defaultValue={task?.projectId}
+        defaultValue={state.values?.projectId ?? task?.projectId}
       />
       <Select
         name="status"
@@ -72,7 +76,7 @@ export default function TaskForm({
         placeholder="Select Status"
         options={statusOptions}
         error={state.errors?.status}
-        defaultValue={task?.status}
+        defaultValue={state.values?.status ?? task?.status}
       />
       <Select
         name="priority"
@@ -80,14 +84,16 @@ export default function TaskForm({
         placeholder="Select Priority"
         options={priorityOptions}
         error={state.errors?.priority}
-        defaultValue={task?.priority}
+        defaultValue={state.values?.priority ?? task?.priority}
       />
       <Input
         type="date"
         name="dueDate"
         label="Due date"
         placeholder="Enter Due date"
-        defaultValue={task?.dueDate?.slice(0, 10)}
+        defaultValue={
+          state.values?.dueDate?.slice(0, 10) ?? task?.dueDate?.slice(0, 10)
+        }
       />
       {state.message && (
         <p

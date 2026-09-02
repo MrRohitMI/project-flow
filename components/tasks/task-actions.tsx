@@ -63,19 +63,21 @@ export default function TaskActions({
           {isDeleting ? <LoaderCircle size={18} /> : <Trash2 size={18} />}
         </Button>
       </div>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        className="w-full max-w-2xl"
-      >
-        <TaskForm
-          projectOptions={projectOptions}
-          task={{ id: taskId, ...task }}
-          onClose={() => {
-            setOpen(false);
-          }}
-        />
-      </Modal>
+      {open && (
+        <Modal
+          open={open}
+          onClose={() => setOpen(false)}
+          className="w-full max-w-2xl"
+        >
+          <TaskForm
+            projectOptions={projectOptions}
+            task={{ id: taskId, ...task }}
+            onClose={() => {
+              setOpen(false);
+            }}
+          />
+        </Modal>
+      )}
     </>
   );
 }
