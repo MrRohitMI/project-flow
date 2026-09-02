@@ -7,7 +7,7 @@ import TaskForm from "./task-form";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearMessages } from "@/store/slices/uiSlice";
 import Input from "../ui/form/input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Select from "../ui/form/select";
 import { priorityOptions, statusOptions } from "./tasks-options-constant";
 type OptionProps = {
@@ -19,12 +19,13 @@ export default function TaskHeader({
 }: {
   projectOptions: OptionProps[];
 }) {
+  const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
-  const [priority, setPriority] = useState("");
-  const [project, setProject] = useState("");
-  const [limit, setLimit] = useState("10");
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
+  const [status, setStatus] = useState(searchParams.get("status") ?? "");
+  const [priority, setPriority] = useState(searchParams.get("priority") ?? "");
+  const [project, setProject] = useState(searchParams.get("project") ?? "");
+  const [limit, setLimit] = useState(searchParams.get("limit") ?? "10");
   const router = useRouter();
   const dispatch = useAppDispatch();
   const successMessage = useAppSelector((store) => store.ui.successMessage);
@@ -76,14 +77,6 @@ export default function TaskHeader({
     params.set("page", "1");
     router.push(params.toString() ? `?${params.toString()}` : "/tasks");
   }, [router, status, priority, project, limit]);
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (!params.has("limit")) {
-      params.set("limit", "10");
-      router.push(`?${params.toString()}`);
-    }
-    router.push(params.toString() ? `?${params.toString()}` : "/tasks");
-  }, [router]);
   return (
     <>
       <div className="flex flex-col gap-2 px-2 sm:flex-row sm:items-center sm:justify-between">
@@ -160,18 +153,20 @@ export default function TaskHeader({
           className="bg-white"
         />
       </div>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        className="w-full max-w-2xl"
-      >
-        <TaskForm
-          projectOptions={projectOptions}
-          onClose={() => {
-            setOpen(false);
-          }}
-        />
-      </Modal>
+      {open && (
+        <Modal
+          open={open}
+          onClose={() => setOpen(false)}
+          className="w-full max-w-2xl"
+        >
+          <TaskForm
+            projectOptions={projectOptions}
+            onClose={() => {
+              setOpen(false);
+            }}
+          />
+        </Modal>
+      )}
     </>
   );
 }

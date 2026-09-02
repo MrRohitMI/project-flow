@@ -49,24 +49,26 @@ export default function ProjectActions({
   };
   return (
     <div className="flex gap-2">
-      <Button onClick={() => setOpen(true)} >
+      <Button onClick={() => setOpen(true)}>
         <SquarePen size={18} />
       </Button>
       <Button variant="danger" onClick={handleDelete} disabled={isDeleting}>
         {isDeleting ? <LoaderCircle size={18} /> : <Trash2 size={18} />}
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        className="w-full max-w-2xl"
-      >
-        <ProjectForm
-          project={{ id: projectId, ...project }}
-          onClose={() => {
-            setOpen(false);
-          }}
-        />
-      </Modal>
+      {open && (
+        <Modal
+          open={open}
+          onClose={() => setOpen(false)}
+          className="w-full max-w-2xl"
+        >
+          <ProjectForm
+            project={{ id: projectId, ...project }}
+            onClose={() => {
+              setOpen(false);
+            }}
+          />
+        </Modal>
+      )}
     </div>
   );
 }
