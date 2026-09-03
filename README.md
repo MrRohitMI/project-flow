@@ -10,7 +10,7 @@ It provides a structured way to create and manage projects, organize tasks, trac
 
 ## 🌐 Live Demo
 
-🔗 **Live Demo:** YOUR_VERCEL_URL
+🔗 **Live Demo:** https://project-flow-v9ly.vercel.app/
 
 📂 **GitHub:** https://github.com/MrRohitMI/project-flow
 
@@ -131,6 +131,27 @@ Built a reusable component system including:
 
 ---
 
+## 📸 Screenshots
+
+### 🖥️ Desktop
+
+| Dashboard | Projects |
+|---|---|
+| ![Dashboard](./public/images/desktop-dashboard.png) | ![Projects](./public/images/desktop-projects.png) |
+
+| Tasks | Landing |
+|---|---|
+| ![Tasks](./public/images/desktop-tasks.png) | ![Landing](./public/images/desktop-landing.png) |
+
+### 📱 Mobile
+
+| Dashboard | Projects |
+|---|---|
+| ![Dashboard](./public/images/mobile-dashboard.png) | ![Projects](./public/images/mobile-projects.png) |
+
+| Tasks | Landing |
+|---|---|
+| ![Tasks](./public/images/mobile-tasks.png) | ![Landing](./public/images/mobile-landing.png) |
 ## 🏗️ Application Architecture
 
 Project Flow follows a modern full-stack Next.js architecture.
@@ -164,7 +185,3 @@ Project Flow follows a modern full-stack Next.js architecture.
                     │      MongoDB        │
                     │      Database       │
                     └─────────────────────┘
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# project-flow
