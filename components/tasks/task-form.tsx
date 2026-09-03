@@ -54,6 +54,7 @@ export default function TaskForm({
         placeholder="Enter Title"
         error={state.errors?.title}
         defaultValue={state.values?.title ?? task?.title}
+        required
       />
       <Textarea
         name="description"
@@ -61,6 +62,7 @@ export default function TaskForm({
         placeholder="Enter Description"
         error={state.errors?.description}
         defaultValue={state.values?.description ?? task?.description}
+        required
       />
       <Select
         name="projectId"
@@ -69,6 +71,7 @@ export default function TaskForm({
         options={projectOptions}
         error={state.errors?.projectId}
         defaultValue={state.values?.projectId ?? task?.projectId}
+        required
       />
       <Select
         name="status"
@@ -77,6 +80,7 @@ export default function TaskForm({
         options={statusOptions}
         error={state.errors?.status}
         defaultValue={state.values?.status ?? task?.status}
+        required
       />
       <Select
         name="priority"
@@ -85,6 +89,7 @@ export default function TaskForm({
         options={priorityOptions}
         error={state.errors?.priority}
         defaultValue={state.values?.priority ?? task?.priority}
+        required
       />
       <Input
         type="date"

@@ -17,6 +17,10 @@
     @apply hover:bg-gray-50;
   }
   :disabled {
-    @apply opacity-50
+    @apply opacity-50;
+  }
+  .required::after {
+    content: "*";
+    color: red;
   }
 }

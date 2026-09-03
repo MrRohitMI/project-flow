@@ -48,6 +48,7 @@ export default function ProjectForm({ project, onClose }: ProjectFormProps) {
         placeholder="Enter Project Name"
         error={state.errors?.name}
         defaultValue={state.values?.name ?? project?.name}
+        required
       />
 
       <Input
@@ -57,6 +58,7 @@ export default function ProjectForm({ project, onClose }: ProjectFormProps) {
         placeholder="Enter Project Key"
         error={state.errors?.key}
         defaultValue={state.values?.key ?? project?.key}
+        required
       />
 
       <Textarea
@@ -65,6 +67,7 @@ export default function ProjectForm({ project, onClose }: ProjectFormProps) {
         name="description"
         placeholder="Enter Description"
         defaultValue={state.values?.description ?? project?.description}
+        required
       />
 
       <Select
@@ -74,6 +77,7 @@ export default function ProjectForm({ project, onClose }: ProjectFormProps) {
         placeholder="Select Status"
         options={statusOptions}
         defaultValue={state.values?.status ?? project?.status}
+        required
       />
 
       <Input
