@@ -31,8 +31,10 @@ export default function Select({
       className={`mb-2 ${isHorizontal ? "flex items-center gap-4" : "space-y-1"} ${wrapperClassName ?? ""}`}
     >
       {label && (
-        <label htmlFor={props.id ?? props.name}
-          className={`${isHorizontal ? "w-32 shrink-0" : ""} text-md text-gray-600 ${labelClassName ?? ""}`}
+        <label
+          htmlFor={props.id ?? props.name}
+          className={`${isHorizontal ? "w-32 shrink-0" : ""} text-md text-gray-600 
+          ${props.required ? "required" : ""} ${labelClassName ?? ""}`}
         >
           {label}
         </label>
