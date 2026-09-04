@@ -18,6 +18,7 @@ export default function RegisterForm() {
         placeholder="Enter Your Name"
         error={state.errors?.name}
         defaultValue={state.values?.name}
+        required
       />
       <Input
         label="Email"
@@ -26,6 +27,7 @@ export default function RegisterForm() {
         type="email"
         error={state.errors?.email}
         defaultValue={state.values?.email}
+        required
       />
       <Input
         label="Password"
@@ -33,6 +35,7 @@ export default function RegisterForm() {
         placeholder="Enter Your Password"
         type="password"
         error={state.errors?.password}
+        required
       />
       <div className="mt-6 flex justify-end gap-3">
         <Link

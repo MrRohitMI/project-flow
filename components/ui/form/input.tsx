@@ -24,7 +24,8 @@ export default function Input({
       {label && (
         <label
           htmlFor={props.id ?? props.name}
-          className={`${isHorizontal ? "w-32 shrink-0" : ""} text-md text-gray-600 ${labelClassName ?? ""}`}
+          className={`${isHorizontal ? "w-32 shrink-0" : ""} text-md text-gray-600 
+          ${props.required ? "required" : ""} ${labelClassName ?? ""}`}
         >
           {label}
         </label>
