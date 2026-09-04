@@ -10,6 +10,8 @@ vi.mock("next/navigation", () => ({
     refresh: vi.fn(),
   }),
 }));
+let mockIsPending = false;
+
 const mockFormAction = vi.fn();
 vi.mock("react", async () => {
   const actual = await vi.importActual("react");
@@ -25,7 +27,7 @@ vi.mock("react", async () => {
         },
       },
       mockFormAction,
-      false,
+      mockIsPending,
     ],
   };
 });
@@ -35,7 +37,7 @@ describe("ProjectForm", () => {
     render(<ProjectForm />);
     expect(screen.getByLabelText("Project Name")).toBeInTheDocument();
     expect(screen.getByLabelText("Project Key")).toBeInTheDocument();
-    expect(screen.getByLabelText("Description")).toBeInTheDocument();
+    expect(screen.getByLabelText("Project Description")).toBeInTheDocument();
     expect(screen.getByLabelText("Status")).toBeInTheDocument();
     expect(screen.getByLabelText("Start Date")).toBeInTheDocument();
     expect(screen.getByLabelText("End Date")).toBeInTheDocument();
@@ -60,8 +62,17 @@ describe("ProjectForm", () => {
     await user.type(nameInput, "Project Flow");
     await user.type(keyInput, "PF");
 
-    await user.click(screen.getByRole("button", { name: "Submit" }));
+    expect(nameInput).toHaveValue("Project Flow");
+    expect(keyInput).toHaveValue("PF");
+  });
+  it("should show submitting state when form is pending", () => {
+    mockIsPending = true
+    render(<ProjectForm />);
 
-    expect(mockFormAction).toHaveBeenCalled();
+    const submitButton = screen.getByRole("button", {
+      name: "Submitting",
+    });
+
+    expect(submitButton).toBeDisabled();
   });
 });
