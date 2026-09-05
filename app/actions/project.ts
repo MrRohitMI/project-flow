@@ -75,7 +75,7 @@ export const createProject = async (
     await Project.create({ ...result.data, userId: currentUser.userId });
     return {
       success: true,
-      message: "Project received successfully",
+      message: "Project created successfully",
     };
   } catch (error) {
     console.error("Failed to create project:", error);
