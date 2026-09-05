@@ -1,35 +1,45 @@
+import { setSuccessMessage } from "@/store/slices/uiSlice";
 import ProjectForm from "../components/projects/project-form";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
-vi.mock("@/store/hooks", () => ({
-  useAppDispatch: () => vi.fn(),
-}));
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({
-    refresh: vi.fn(),
-  }),
-}));
+import { afterEach, describe, expect, it, vi } from "vitest";
+const mockRefresh = vi.fn();
+const mockDispatch = vi.fn();
+const mockFormAction = vi.fn();
+let mockSuccess = false;
+let mockMessage = "Please fix the errors";
 let mockIsPending = false;
 
-const mockFormAction = vi.fn();
+vi.mock("@/store/hooks", () => ({
+  useAppDispatch: () => mockDispatch,
+}));
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    refresh: mockRefresh,
+  }),
+}));
 vi.mock("react", async () => {
-  const actual = await vi.importActual("react");
+  const actual = await vi.importActual<typeof import("react")>("react");
 
   return {
     ...actual,
     useActionState: () => [
       {
-        success: false,
-        message: "Please fix the errors",
-        errors: {
-          name: "Project name is required",
-        },
+        success: mockSuccess,
+        message: mockMessage,
+        errors: { name: "Project name is required" },
       },
       mockFormAction,
       mockIsPending,
     ],
   };
+});
+afterEach(() => {
+  mockIsPending = false;
+  mockSuccess = false;
+  mockMessage = "Please fix the errors";
+  vi.clearAllMocks();
 });
 
 describe("ProjectForm", () => {
@@ -66,7 +76,7 @@ describe("ProjectForm", () => {
     expect(keyInput).toHaveValue("PF");
   });
   it("should show submitting state when form is pending", () => {
-    mockIsPending = true
+    mockIsPending = true;
     render(<ProjectForm />);
 
     const submitButton = screen.getByRole("button", {
@@ -74,5 +84,21 @@ describe("ProjectForm", () => {
     });
 
     expect(submitButton).toBeDisabled();
+  });
+  it("should handle successful project submission", () => {
+    mockSuccess = true;
+    mockMessage = "Project created successfully";
+
+    const mockOnClose = vi.fn();
+
+    render(<ProjectForm onClose={mockOnClose} />);
+
+    expect(mockRefresh).toHaveBeenCalled();
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      setSuccessMessage("Project created successfully"),
+    );
+
+    expect(mockOnClose).toHaveBeenCalled();
   });
 });
