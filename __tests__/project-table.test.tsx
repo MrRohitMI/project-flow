@@ -43,7 +43,39 @@ describe("ProjectTable", () => {
     expect(screen.getByText("Project Flow")).toBeInTheDocument();
     expect(screen.getByText("PF")).toBeInTheDocument();
     expect(
-      screen.getByText("Project management application")
+      screen.getByText("Project management application"),
     ).toBeInTheDocument();
+  });
+  it("should show empty state when no projects are found", async () => {
+    mockGetProjects.mockResolvedValue({
+      projects: [],
+      total: 0,
+    });
+
+    const component = await ProjectTable({
+      page: 1,
+      limit: 10,
+    });
+
+    render(component);
+
+    expect(screen.getByText("No projects found")).toBeInTheDocument();
+  });
+  it("should call getProjects with the correct parameters", async () => {
+    mockGetProjects.mockResolvedValue({
+      projects: [],
+      total: 0,
+    });
+
+    const component = await ProjectTable({
+      search: "react",
+      status: "active",
+      page: 2,
+      limit: 5,
+    });
+
+    render(component);
+
+    expect(mockGetProjects).toHaveBeenCalledWith("react", "active", 2, 5);
   });
 });
