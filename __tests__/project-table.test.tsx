@@ -13,7 +13,9 @@ vi.mock("../app/actions/project", () => ({
 vi.mock("../components/projects/project-actions", () => ({
   default: () => <div>Project Actions</div>,
 }));
-
+vi.mock("../components/ui/pagination", () => ({
+  default: () => <div>Pagination</div>,
+}));
 describe("ProjectTable", () => {
   it("should render projects", async () => {
     mockGetProjects.mockResolvedValue({
@@ -77,5 +79,35 @@ describe("ProjectTable", () => {
     render(component);
 
     expect(mockGetProjects).toHaveBeenCalledWith("react", "active", 2, 5);
+  });
+  it("should render pagination when there are multiple pages", async () => {
+    mockGetProjects.mockResolvedValue({
+      projects: [],
+      total: 25,
+    });
+
+    const component = await ProjectTable({
+      page: 1,
+      limit: 10,
+    });
+
+    render(component);
+
+    expect(screen.getByText("Pagination")).toBeInTheDocument();
+  });
+  it("should not render pagination when there is only one page", async () => {
+    mockGetProjects.mockResolvedValue({
+      projects: [],
+      total: 5,
+    });
+
+    const component = await ProjectTable({
+      page: 1,
+      limit: 10,
+    });
+
+    render(component);
+
+    expect(screen.queryByText("Pagination")).not.toBeInTheDocument();
   });
 });
