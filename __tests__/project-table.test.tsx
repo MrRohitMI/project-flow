@@ -110,4 +110,31 @@ describe("ProjectTable", () => {
 
     expect(screen.queryByText("Pagination")).not.toBeInTheDocument();
   });
+  it("should render project status", async () => {
+    mockGetProjects.mockResolvedValue({
+      projects: [
+        {
+          _id: {
+            toString: () => "project-1",
+          },
+          name: "Project Flow",
+          key: "PF",
+          description: "Project management application",
+          status: "active",
+          startDate: null,
+          endDate: null,
+        },
+      ],
+      total: 1,
+    });
+
+    const component = await ProjectTable({
+      page: 1,
+      limit: 10,
+    });
+
+    render(component);
+
+    expect(screen.getByText("ACTIVE")).toBeInTheDocument();
+  });
 });
