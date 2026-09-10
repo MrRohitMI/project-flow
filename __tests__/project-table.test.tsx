@@ -2,16 +2,20 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import ProjectTable from "../components/projects/project-table";
 
-const { mockGetProjects } = vi.hoisted(() => ({
-  mockGetProjects: vi.fn(),
-}));
-
 vi.mock("../app/actions/project", () => ({
   getProjects: mockGetProjects,
 }));
 
+const { mockGetProjects, mockProjectActions } = vi.hoisted(() => ({
+  mockGetProjects: vi.fn(),
+  mockProjectActions: vi.fn(),
+}));
+
 vi.mock("../components/projects/project-actions", () => ({
-  default: () => <div>Project Actions</div>,
+  default: (props: any) => {
+    mockProjectActions(props);
+    return <div>Project Actions</div>;
+  },
 }));
 vi.mock("../components/ui/pagination", () => ({
   default: () => <div>Pagination</div>,
@@ -136,5 +140,42 @@ describe("ProjectTable", () => {
     render(component);
 
     expect(screen.getByText("ACTIVE")).toBeInTheDocument();
+  });
+  it("should pass project data to ProjectActions", async () => {
+    mockGetProjects.mockResolvedValue({
+      projects: [
+        {
+          _id: {
+            toString: () => "project-1",
+          },
+          name: "Project Flow",
+          key: "PF",
+          description: "Project management application",
+          status: "active",
+          startDate: null,
+          endDate: null,
+        },
+      ],
+      total: 1,
+    });
+
+    const component = await ProjectTable({
+      page: 1,
+      limit: 10,
+    });
+
+    render(component);
+
+    expect(mockProjectActions).toHaveBeenCalledWith(
+      expect.objectContaining({
+        projectId: "project-1",
+        project: expect.objectContaining({
+          name: "Project Flow",
+          key: "PF",
+          description: "Project management application",
+          status: "active",
+        }),
+      }),
+    );
   });
 });
