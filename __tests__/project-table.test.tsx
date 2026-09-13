@@ -141,7 +141,7 @@ describe("ProjectTable", () => {
 
     expect(screen.getByText("ACTIVE")).toBeInTheDocument();
   });
-  it("should pass project data to ProjectActions", async () => {
+  it("should pass all project data to ProjectActions", async () => {
     mockGetProjects.mockResolvedValue({
       projects: [
         {
