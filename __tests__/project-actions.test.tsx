@@ -17,7 +17,7 @@ vi.mock("../app/actions/project", () => ({
 }));
 
 describe("ProjectActions", () => {
-  it("should have render edit and delete buttons", () => {
+  it("should render edit and delete buttons", () => {
     render(
       <ProjectActions
         projectId="project-1"
